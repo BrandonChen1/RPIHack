@@ -1,0 +1,11 @@
+{
+  "name": "RPIHack",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.16.4",
+    "http": "0.0.0",
+    "package.json": "^2.0.1",
+    "save": "^2.3.3",
+    "socket.io": "^2.2.0"
+  }
+}

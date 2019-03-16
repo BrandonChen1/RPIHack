@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<style>
+    #Classes{
+        display: none;
+    }
+
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+</head>
+<body>
+    <div id = "loginPage">
+        <p id = "error"></p>
+        <form id = "loginForm">
+            <p> Enter a Username </p>
+            <input size = "35" type = "text" id = "username" autocomplete = "off" required>
+            <p> Enter a University ID</p>
+            <input size = "35" type = "text" id = "UID" autocomplete = "off" required>
+            <p>Are you a teacher or a student?</p>
+            <input type="radio" name="teacher" value="teacher"> Teacher<br>
+            <input type="radio" name="teacher" value="student" checked> Student<br>
+            <input type = "submit">
+        </form>
+    </div>
+
+    <div id = "Teacher">
+        <p> Hello</p>
+
+    </div>
+    <script>
+
+        $(function (){
+           var socket = io();
+
+            var $userSubmit = $('#loginForm');
+            var $error = $('#error');
+            var $user = $('#username');
+            var $UID = $('#UID');
+            var $login = $('#loginPage');
+            var $classes = $('#Classes');
+
+            $userSubmit.submit(function(e){
+                e.preventDefault();
+                socket.emit('new user', $user.val(), $UID.val(), function(user, UID){
+                    if(user){
+                        $login.hide();
+                        $classes.show();
+                    }
+                    else{
+                        $error.html('That username is already taken.');
+                    }
+                });
+                $userSubmit.val('');
+                $UID.val('');
+            });
+
+        });
+
+    </script>
+</body>
+</html>
