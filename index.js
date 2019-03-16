@@ -1,14 +1,48 @@
-var app = require('express')(),
-    http = require('http').Server(app),
-    io = require('socket.io')(http),
-    users= [],
-    UIDs = [];
+var express = require('express'),
+    app = express(),
+    server = app.listen(4000);
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/login.html');
+io = require('socket.io').listen(server);
+
+var users = {};
+var MapORooms = new Map();
+MapORooms.set('1',new Array());
+
+app.get('/',function(req,res){
+    res.sendFile(__dirname+ '/login.html');
 });
 
-io.on("connection", function(socket){
+io.sockets.on('connection',function(socket){
+    //Validate Join Room
+    socket.on('Join-Room',function(data){
+        if(MapORooms.get(data.toString()) == null){
+            socket.emit('Invalid-Room',data);
+
+
+
+        }
+        else{
+            AR = MapORooms.get(data.toString());
+            AR.push(socket);
+            socket.ID = data.toString();
+            socket.emit('Valid-Room',data);
+        }
+    });
+
+    socket.on('Create-Room',function(data){
+        MapORooms.set(data.toString(),new Array());
+        socket.emit('Create-Good',data);
+        console.log(MapORooms);
+    });
+
+    socket.on('Send-message',function(data){
+        var RoomID = socket.ID;
+        var Array = MapORooms.get(RoomID);
+        for( i in Array){
+            i.emit('Receive-message',data);
+        }
+
+    });
 
     socket.on('new user', function(user, UID, callback){
         if (user in users){
@@ -16,7 +50,7 @@ io.on("connection", function(socket){
         }
         else{
             callback(true);
-            socket.nickname = data;
+            socket.nickname = user;
             users[socket.nickname] = socket;
             socket.uid = UID;
             users[socket.uid] = socket;
@@ -24,10 +58,10 @@ io.on("connection", function(socket){
     });
 
 
-});
 
 
-//Listens on the port 3000
-http.listen(3000, function(){
-    console.log('listening on *:3000');
 });
+
+function createRoom(){
+
+}
