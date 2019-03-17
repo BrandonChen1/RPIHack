@@ -9,4 +9,7 @@
     "save": "^2.3.3",
     "socket.io": "^2.2.0"
   }
+  "scripts": {
+    "start": "index.js"
+  }
 }
