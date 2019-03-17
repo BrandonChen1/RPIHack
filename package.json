@@ -1,10 +1,11 @@
 {
-  "name": "RPIHack",
+  "name": "ChatAppWithRoom",
   "version": "1.0.0",
   "dependencies": {
+    "ejs": "2.6.1",
     "express": "^4.16.4",
-    "http": "0.0.0",
     "package.json": "^2.0.1",
+    "pug": "^2.0.3",
     "save": "^2.3.3",
     "socket.io": "^2.2.0"
   }
