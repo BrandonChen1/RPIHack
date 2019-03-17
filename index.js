@@ -7,6 +7,7 @@ io = require('socket.io').listen(server);
 var users = {};
 var MapORooms = new Map();
 MapORooms.set('1',new Array());
+
 var publicDir = require('path').join(__dirname,'/public');
 app.use(express.static(publicDir));
 
@@ -26,22 +27,42 @@ io.sockets.on('connection',function(socket){
         else{
             AR = MapORooms.get(data.toString());
             AR.push(socket);
-            socket.ID = data.toString();
+            socket.RoomID = data.toString();
             socket.emit('Valid-Room',data);
         }
     });
 
     socket.on('Create-Room',function(data){
-        MapORooms.set(data.toString(),new Array());
-        socket.emit('Create-Good',data);
-        console.log(MapORooms);
+        //console.log(MapORooms);
+        if(MapORooms.get(data.toString()) == null){
+            var AR = new Array();
+            AR.push(socket);
+            MapORooms.set(data.toString(),AR);
+            socket.RoomID = data.toString();
+            socket.emit('Create-Good',data);
+            //console.log(MapORooms)
+            // ;
+        }
+        else{
+
+            socket.emit('Create-Bad',data);
+        }
     });
 
     socket.on('Send-message',function(data){
-        var RoomID = socket.ID;
-        var Array = MapORooms.get(RoomID);
-        for( i in Array){
-            i.emit('Receive-message',data);
+        console.log("Logged");
+        console.log(socket.RoomID);
+        var AR = MapORooms.get(socket.RoomID);
+        //console.log(AR);
+        //console.log(socket.RoomID);
+        console.log(AR.length);
+
+        for(var i=0; i < AR.length;i++){
+            var tempsocket = AR[i];
+            //console.log(tempsocket);
+            //console.log(socket.nickname);
+            tempsocket.emit('Receive-message',{Msg:(socket.nickname+": "+ data),name:socket.nickname} );
+            //console.log('RM');
         }
 
     });
@@ -55,15 +76,41 @@ io.sockets.on('connection',function(socket){
             socket.nickname = user;
             users[socket.nickname] = socket;
             socket.uid = UID;
-            users[socket.uid] = socket;
+            updateNicknames();
         }
     });
+    socket.on('Leave Room',function(data){
+        var RoID = socket.RoomID;
+        var RoomArray = MapORooms.get(RoID);
+        if(data) {
+            for (var i = 0; i < RoomArray.length; i++) {
+                var tempsocket = RoomArray[i];
+                if (tempsocket.nickname == socket.nickname) {
+                    RoomArray.splice(i, 1);
+                    tempsocket.emit('Leave-Room-Good');
+                }
+            }
+        }
+        else{
+            for(var i =0; i < RoomArray.length;i++){
+                //console.log(RoomArray);
+                //console.log(RoomArray.length);
+                var tempsocket = RoomArray[i];
+                //console.log(tempsocket.nickname);
+                //RoomArray.splice(i, 1);
+                tempsocket.emit('Leave-Room-Good');
+            }
+            MapORooms.delete(RoID);
+        }
+
+
+    });
+
+    function updateNicknames(){
+        io.emit('usernames', Object.keys(users));
+    }
 
 
 
 
 });
-
-function createRoom(){
-
-}
