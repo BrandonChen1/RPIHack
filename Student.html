@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id = "StudentValidate">
+    <form id="JoinRoom" action = "/Room" method = "POST">
+        <br> Join a room </br>
+        <input size = "25" id = "RoomID">
+        <input type = "submit">
+
+    </form>
+</div>
+</body>
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    jQuery(function($){
+        var socket = io.connect();
+        var RoomID = $('#')
+    })
+</script>
+</html>
