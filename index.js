@@ -7,6 +7,8 @@ io = require('socket.io').listen(server);
 var users = {};
 var MapORooms = new Map();
 MapORooms.set('1',new Array());
+var publicDir = require('path').join(__dirname,'/public');
+app.use(express.static(publicDir));
 
 app.get('/',function(req,res){
     res.sendFile(__dirname+ '/login.html');

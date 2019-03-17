@@ -1,40 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<style>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<style>
+    html{
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+    .navbar {
+        background-color: lightskyblue;
+        border-color: darkblue;
+        font-size: 30px;
+        font-family: "Arial Black";
+        margin-bottom:0;
+    }
+    #loginPage {
+        width: 300px;
+        float: right;
+        margin-right: 50px;
+    }
+    p {
+        font-size: 18px;
+        font-weight: bold;
+    }
+    #classroom_pic {
+        margin-left: 35px;
+        float: left;
+        width:75vw;
+        height:50vh;
+    }
+    @keyframes bgcolor {
+        0% {
+            background-color: lightskyblue;
+        }
+        30% {
+            background-color: aliceblue;
+        }
+        60% {
+            background-color: lightblue;
+        }
+        90% {
+            background-color: lightgray;
+        }
+        100% {
+            background-color: powderblue;
+        }
+    }
+    #RoomID {
+        height: 100vh;
+        -webkit-animation: bgcolor 20s infinite;
+        animation: bgcolor 10s infinite;
+        -webkit-animation-direction: alternate;
+        animation-direction: alternate;
+    }
+    #RoomS{
+        text-align: center;
+        position: absolute;
+        left: 43%;
+        top: 45%;
+    }
+    #RoomS input {
+        padding: 10px;
+        background: transparent;
+        color: midnightblue;
+        border: solid 1px black;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-align:center;
+        font-size: 20px;
+    }
+    #student_title{
+        font-size: 30px;
+        font-weight:bold;
+    }
+    #teacher_title{
+        font-size: 30px;
+        font-weight:bold;
+    }
+    #TeacherCreate {
+        height: 100vh;
+        -webkit-animation: bgcolor 20s infinite;
+        animation: bgcolor 10s infinite;
+        -webkit-animation-direction: alternate;
+        animation-direction: alternate;
+    }
+    #CreateRoom input {
+        padding: 10px;
+        background: transparent;
+        color: midnightblue;
+        border: solid 1px black;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-align:center;
+        font-size: 20px;
+    }
+    #CreateRoom{
+        text-align: center;
+        position: absolute;
+        left: 43%;
+        top: 45%;
+    }
 </style>
+
 <head>
     <meta charset="UTF-8">
     <title id = "ChatroomID">ChatRoom</title>
 </head>
-<body>
-<div id = "loginPage">
-    <p id = "error"></p>
-    <form id = "loginForm">
-        <p> Enter a Username </p>
-        <input size = "35" type = "text" id = "username" autocomplete = "off" required>
-        <p> Enter a University ID</p>
-        <input size = "35" type = "text" id = "UID" autocomplete = "off" required>
-        <p>Are you a teacher or a student?</p>
-        <input type="radio" name="ts" value="teacher" required> Teacher<br>
-        <input type="radio" name="ts" value="student" required> Student<br>
-        <input type = "submit">
-    </form>
+<body style="background-color: #EDEFF2">
+<nav class="navbar navbar-light bg-light">
+  <span class="navbar-text">
+    Question Forum
+  </span>
+</nav>
+<div class = "row" id = "loginScreen">
+    <div id = "classroom_pic">
+        <img src = "classroom.jpg" width = "100%" height = "450">
+    </div>
+    <div id = "loginPage">
+        <p id = "error"></p>
+        <form id = "loginForm">
+            <p> <br><br><br>Enter a Username </p>
+            <input size = "35" type = "text" id = "username" autocomplete = "off" required>
+            <p> <br> Enter a University ID</p>
+            <input size = "35" type = "text" id = "UID" autocomplete = "off" required>
+            <p> <br> Are you a teacher or a student?</p>
+            <input type="radio" name="ts" value="teacher" required> Teacher<br>
+            <input type="radio" name="ts" value="student" required> Student<br><br>
+            <input type = "submit">
+        </form>
+    </div>
 </div>
 
 <div id = "TeacherCreate">
-    Create a Room
     <form id = "CreateRoom">
+        <br><p id = "teacher_title">CREATE A ROOM </p> </br>
         <input size ='25' id = 'CreateID'>
         <input type ="submit">
     </form>
 </div>
 <div id = "RoomID">
     <form id="RoomS">
-        <br> Join A Room </br>
+        <br><p id = "student_title">JOIN A ROOM </p> </br>
         <input id = "RoomSubmit">
-        <input type = "submit">
+        <br> <input id = "RoomSubmitButton" type = "submit">
     </form>
 
 </div>
@@ -63,10 +181,10 @@
         var $error = $('#error');
         var $user = $('#username');
         var $UID = $('#UID');
-        var $login = $('#loginPage');
+        var $loginScreen = $('#loginScreen');
         var $classes = $('#Classes');
 
-
+        //$loginScreen.hide();
         chatbox.hide();
         TeacherCreate.hide();
         RoomID.hide();
@@ -76,7 +194,7 @@
             e.preventDefault();
             socket.emit('new user', $user.val(), $UID.val(), function(user, UID){
                 if($('input[name=ts]:checked') && user){
-                    $login.hide();
+                    $loginScreen.hide();
                     if($('input[name=ts]:checked').val()  == "student"){
                         RoomID.show();
                     }
@@ -134,10 +252,7 @@
 
 
 
-
-
-
-
+        
 
     })
 </script>
