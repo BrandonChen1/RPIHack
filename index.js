@@ -110,6 +110,12 @@ io.sockets.on('connection',function(socket){
         io.emit('usernames', Object.keys(users));
     }
 
+    socket.on('disconnect', function(data){
+        if(!socket.nickname) return;
+        delete users[socket.nickname];
+        updateNicknames();
+    });
+
 
 
 
